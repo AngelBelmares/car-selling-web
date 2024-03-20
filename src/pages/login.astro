@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout title="Login">
+  <section class="flex flex-col h-auto w-full max-w-screen-sm items-center justify-center text-lg">
+    <h1 class="text-3xl font-medium ">Login</h1>
+    <form action="/login" method="post" class="flex flex-col items-center w-full px-10 gap-y-5">
+      <div class="flex flex-col w-full">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required />
+      </div>
+      <div class="flex flex-col w-full">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <button type="submit" class="flex items-center h- w-fit py-1 px-4 bg-gradient-to-tr from-dull-lavender-400 to-dull-lavender-800 rounded-md">Login</button>
+    </form>
+  </section>
+</Layout>
