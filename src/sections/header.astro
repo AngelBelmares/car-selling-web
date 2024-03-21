@@ -1,4 +1,6 @@
 ---
+import { Button } from '../components/Button.tsx'
+
 interface NavigationLink {
 	title: string;
 	iconName: string;
@@ -20,7 +22,7 @@ const navigationLinks: NavigationLink[] = [
 		title: 'Citas',
 		iconName: 'edit_calendar',
 		href: '/citas'
-	}
+	},
 ]
 ---
 
@@ -28,15 +30,15 @@ const navigationLinks: NavigationLink[] = [
   <figure>
    <h1 class="inline-flex text-2xl">
      <span>Car</span>
-     <span class="text-dull-lavender-500">Link</span>
+     <span class="text-logan-300">Link</span>
    </h1>
   </figure>
-  <nav class="flex h-full items-center py-3 font-medium text-lg">
-   <ul class="flex h-full gap-x-1">
+  <nav class="flex h-full w-fit items-center py-3 font-medium text-lg">
+    <ul class="flex h-full w-full gap-x-1">
      {navigationLinks.map(({href, title, iconName}) => (
-       <li class="flex h-full aspect-square w-auto items-center justify-center rounded-lg hover:bg-gray-500/60 transition-colors duration-200">
-         <a href={href}>
-           <div class="flex flex-col items-center gap-y-2">
+       <li class="flex h-full aspect-square w-auto items-center justify-center rounded-lg hover:bg-logan-400/80 transition-colors duration-200">
+         <a href={href} class="flex-grow">
+           <div class="flex w-full h-full flex-col items-center gap-y-2">
              <h2>{title}</h2>
              <span class="material-symbols-outlined">
                {iconName}
@@ -45,9 +47,10 @@ const navigationLinks: NavigationLink[] = [
          </a>
        </li>
        ))}
-   </ul>
+    </ul>
   </nav>
-  <div>
-   
+  <div class="flex gap-x-2">
+    <Button text='Registrarse'></Button>
+    <Button text='Iniciar Sesión'></Button>
   </div>
  </header>
