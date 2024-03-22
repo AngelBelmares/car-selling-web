@@ -1,21 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro"
+import { LoginForm } from "../components/LoginForm.tsx"
 ---
 
 <Layout title="Login">
-  <section class="flex flex-col h-auto w-full max-w-screen-sm items-center justify-center text-lg bg-neutral-900 rounded-md py-5 relative">
-    <div class="absolute -z-10 -inset-[2px] w-auto h-auto bg-gradient-to-br from-logan-300/80 via-transparent to-logan-300/80 rounded-md"></div>
-    <h1 class="text-3xl font-medium ">Login</h1>
-    <form action="/login" method="post" class="flex flex-col items-center w-full px-10 gap-y-5">
-      <div class="flex flex-col w-full">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required />
-      </div>
-      <div class="flex flex-col w-full">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-      </div>
-      <button type="submit" class="flex items-center h- w-fit py-1 px-4 bg-gradient-to-tr from-dull-lavender-400 to-dull-lavender-800 rounded-md">Login</button>
-    </form>
-  </section>
+  <div class="flex w-full max-w-screen-sm h-screen items-center justify-center">
+    <LoginForm />
+  </div>
 </Layout>

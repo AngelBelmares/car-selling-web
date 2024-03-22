@@ -30,6 +30,9 @@ export default {
           900: '#564270',
           950: '#372a4b'
         }
+      },
+      boxShadow: {
+        outline: '0 0 0 3px rgba(66, 153, 225, 0.5)'
       }
     }
   },
