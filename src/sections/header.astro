@@ -16,41 +16,45 @@ const navigationLinks: NavigationLink[] = [
 	{
 		title: 'Autos',
 		iconName: 'car_tag',
-		href: '/autos'
+		href: '/cars'
 	},
 	{
 		title: 'Citas',
 		iconName: 'edit_calendar',
-		href: '/citas'
+		href: '/appointment'
 	},
 ]
 ---
 
-<header class="flex w-full h-24 justify-around items-center">
-  <figure>
-   <h1 class="inline-flex text-2xl">
-     <span>Car</span>
-     <span class="text-logan-300">Link</span>
+<header class="sticky shrink-0 grid grid-cols-3 w-full h-24 items-center bg-neutral-900 border-b-[1px] border-neutral-600/30">
+  <figure class="flex justify-center items-center">
+   <h1>
+      <a href="/" class="inline-flex text-2xl font-medium">
+        <span>Car</span>
+        <span class="text-logan-300">Link</span>
+      </a>
    </h1>
   </figure>
-  <nav class="flex h-full w-fit items-center py-3 font-medium text-lg">
-    <ul class="flex h-full w-full gap-x-1">
+  <nav class="flex-grow h-full flex justify-center items-center py-2 font-medium text-lg">
+    <ul class="flex h-full gap-x-4 justify-center">
      {navigationLinks.map(({href, title, iconName}) => (
-       <li class="flex h-full aspect-square w-auto items-center justify-center rounded-lg hover:bg-logan-400/80 transition-colors duration-200">
-         <a href={href} class="flex-grow">
-           <div class="flex w-full h-full flex-col items-center gap-y-2">
-             <h2>{title}</h2>
-             <span class="material-symbols-outlined">
+       <li class="h-full aspect-square w-auto items-center justify-center rounded-lg hover:bg-logan-400/80 transition-colors duration-200">
+         <a href={href} class="flex w-full h-full flex-col items-center justify-center">
+          <h2>{title}</h2>
+             <span class="material-symbols-outlined text-3xl">
                {iconName}
              </span>
-           </div>
          </a>
        </li>
        ))}
     </ul>
   </nav>
-  <div class="flex gap-x-2">
-    <Button text='Registrarse'></Button>
-    <Button text='Iniciar Sesión'></Button>
+  <div class="flex gap-x-2 justify-center items-center">
+    <a href="/register">
+      <Button text='Registrarse'></Button>
+    </a>
+    <a href="/login">
+      <Button text='Iniciar Sesión'></Button>
+    </a>
   </div>
- </header>
+</header>
