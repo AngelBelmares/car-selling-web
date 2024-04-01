@@ -1,13 +1,44 @@
+import { useState } from "react"
+
 export function LoginForm (): JSX.Element {
+  const [error, setError] = useState<string | null>(null)
+
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    if(email === '' || password === ''){
+      setError('Por favor llena todos los campos')
+      return
+    }
+    const response = await fetch('api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    })
+    if(response.ok){
+      setError(null)
+      window.location.href = '/'
+    } else {
+      setError('Correo o contraseña incorrectos')
+    }
+  }
+
   return (
     <section className='flex flex-col h-auto w-full max-w-screen-sm items-center justify-center text-lg bg-neutral-900 rounded-md py-5 relative'>
       <div className='absolute -z-10 -inset-[2px] w-auto h-auto bg-gradient-to-br from-logan-300/80 via-transparent to-logan-300/80 rounded-md shadow-md' />
       <h1 className='text-3xl font-medium '>Login</h1>
       <hr className='h-px w-full mt-6 mb-2 bg-gradient-to-r from-transparent via-logan-300 to-transparent border-0' />
-      <form action='/login' method='post' className='flex flex-col items-center w-full px-10 mt-10 mb-2'>
+      <form onSubmit={handleLogin} className='flex flex-col items-center w-full px-10 mt-10 mb-2'>
         <div className='relative w-full py-1 px-3 ring-2 ring-logan-300 rounded-full focus-within:shadow-[0px_0px_4px_4px_rgba(188,176,217,0.76)]'>
-          <label htmlFor='username' className='absolute -top-4 left-5 z-10 bg-neutral-900 px-3 text-base'>e - mail</label>
-          <input type='text' id='username' name='username' required className='relative z-0 rounded-full focus:outline-none border-2 border-none bg-inherit w-full px-1' />
+          <label htmlFor='email' className='absolute -top-4 left-5 z-10 bg-neutral-900 px-3 text-base'>e - mail</label>
+          <input type='text' id='email' name='email' required className='relative z-0 rounded-full focus:outline-none border-2 border-none bg-inherit w-full px-1' />
         </div>
         <div className='relative w-full py-1 px-3 mt-10 ring-2 ring-logan-300 rounded-full focus-within:shadow-[0px_0px_4px_4px_rgba(188,176,217,0.76)]'>
           <label htmlFor='password' className='absolute -top-4 left-5 z-10 bg-neutral-900 px-3 text-base'>Password</label>
