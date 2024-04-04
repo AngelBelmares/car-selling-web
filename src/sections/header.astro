@@ -1,5 +1,12 @@
 ---
-import { Button } from '../components/Button.tsx'
+import { Session } from '../components/Session.tsx'
+
+
+const session = {
+  isLogged: Astro.cookies.get('isLogged')?.boolean(),
+  sessionID: Astro.cookies.get('sessionID')?.value
+}
+
 
 interface NavigationLink {
 	title: string;
@@ -49,12 +56,5 @@ const navigationLinks: NavigationLink[] = [
        ))}
     </ul>
   </nav>
-  <div class="flex gap-x-2 justify-center items-center">
-    <a href="/register">
-      <Button text='Registrarse'></Button>
-    </a>
-    <a href="/login">
-      <Button text='Iniciar Sesión'></Button>
-    </a>
-  </div>
+  <Session isLogged={true} sessionID='' client:load></Session>
 </header>

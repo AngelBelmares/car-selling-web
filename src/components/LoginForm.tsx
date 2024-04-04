@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 export function LoginForm (): JSX.Element {
   const [error, setError] = useState<string | null>(null)
 
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>): Promise<any> => {
     event.preventDefault()
 
     const form = event.currentTarget
@@ -11,7 +11,7 @@ export function LoginForm (): JSX.Element {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    if(email === '' || password === ''){
+    if (email === '' || password === '') {
       setError('Por favor llena todos los campos')
       return
     }
@@ -22,7 +22,7 @@ export function LoginForm (): JSX.Element {
       },
       body: JSON.stringify({ email, password })
     })
-    if(response.ok){
+    if (response.ok) {
       setError(null)
       window.location.href = '/'
     } else {

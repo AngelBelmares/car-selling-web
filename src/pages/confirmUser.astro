@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro"
+import { ConfirmUserForm } from "../components/ConfirmUserForm.tsx";
+---
+
+<Layout title="Confirmar Usuario">
+  <div class="flex w-full max-w-screen-sm h-screen items-center justify-center">
+    <ConfirmUserForm client:only/>
+  </div>
+</Layout>

@@ -1,11 +1,11 @@
 interface ButtonProps {
-  text: string
+  children: string
   type?: 'button' | 'submit' | 'reset'
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
   showBackgroundLine?: boolean
 }
 
-export function Button ({ text, type = 'button', onClick, showBackgroundLine }: ButtonProps): JSX.Element {
+export function Button ({ children, type = 'button', onClick, showBackgroundLine }: ButtonProps): JSX.Element {
   return (
     <div className='flex relative z-0 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
       {showBackgroundLine === true &&
@@ -17,7 +17,7 @@ export function Button ({ text, type = 'button', onClick, showBackgroundLine }: 
           onClick={onClick}
           className='w-full text-white text-lg px-6 bg-neutral-900 rounded-full hover:bg-gradient-to-r hover:from-logan-400/50 hover:to-transparent duration-200'
         >
-          {text}
+          {children}
         </button>
       </div>
     </div>
