@@ -1,72 +1,41 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { carListApi, mapCars } from '../utils/carApi';
+import type { CarCard } from '../types/cars';
+import carApiResponse from '../mockups/carApiResponse.json'
 
-interface Car {
-  name: string;
-  price: string;
-  image: string;
+let carList: CarCard[] = [];
+
+// const response = await carListApi();
+
+const response = carApiResponse;
+
+if(response[0]?.idCar > 0) {
+  carList = mapCars(response);
 }
-
-const carList = [
-  {
-    name: 'Car 1',
-    price: '40,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  },
-  {
-    name: 'Car 2',
-    price: '50,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  },
-  {
-    name: 'Car 3',
-    price: '60,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  },
-  {
-    name: 'Car 4',
-    price: '70,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  },
-  {
-    name: 'Car 5',
-    price: '80,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  },
-  {
-    name: 'Car 6',
-    price: '90,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  },
-  {
-    name: 'Car 7',
-    price: '100,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  },
-  {
-    name: 'Car 8',
-    price: '110,500 MXN',
-    image: 'https://via.placeholder.com/150'
-  }
-]
 ---
 
 <Layout title="Autos en venta">
   <div class="flex flex-col max-w-screen-xl h-full w-full">
-    <h1 class="self-center text-2xl text-logan-300 my-8">Nuestros vehículos en venta</h1>
-    <section>
-
-    </section>
-    <section class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4">
-      {carList.map((car: Car) =>  {
-        return ((
+    <h1 class="self-center text-4xl font-bold text-logan-200 my-10 text-center">Nuestros vehículos en venta</h1>
+    <section class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-x-4 gap-y-7 pb-12">
+      {
+        carList.length > 0 
+        ? 
+        carList.map((car: CarCard) => (
           <article class="flex flex-col">
-            <img src={car.image} alt={car.name} class="w-full aspect-video object-cover" />
-            <h2 class="text-xl">{car.name}</h2>
-            <p>Price: {car.price}</p>
+            <img src={car.image} alt={car.name} class="w-full aspect-video object-contain" />
+            <h2 class="text-base pl-1">{`${car.name} ${car.year}`}</h2>
+            <p class="text-xl font-semibold pl-1">$ {car.price}</p>
+            <a href={`/appointment?idCar=${car.idCar}`} class="flex items-center justify-center py-1 my-2 rounded-sm gap-x-2 text-lg bg-logan-400/90 hover:scale-105 hover:brightness-105 transition-all duration-100">Agendar Cita 
+              <span class="material-symbols-outlined">
+                edit_calendar
+              </span>     
+            </a>
           </article>
-        ))
-      })}
+        )
+      ) : <p>Cargando Autos</p>
+      }
     </section>
   </div>
 </Layout>
