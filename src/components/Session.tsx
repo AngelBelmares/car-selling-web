@@ -1,14 +1,13 @@
 import { Button } from './Button'
 
 interface SessionProps {
-  isLogged: boolean | undefined
-  sessionID: string
+  userId?: string
 }
 
-export function Session ({ isLogged = false, sessionID }: SessionProps): JSX.Element {
+export function Session ({ userId = '' }: SessionProps): JSX.Element {
   return (
     <div className='flex gap-x-2 justify-center items-center'>
-      {!isLogged
+      {userId.length <= 0
         ? (
           <div className='flex'>
             <a href='/register'>
@@ -35,6 +34,5 @@ export function Session ({ isLogged = false, sessionID }: SessionProps): JSX.Ele
 }
 
 const handleCloseSession = (): void => {
-  document.cookie = 'isLogged=false; sessionID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-  window.location.href = '/'
+  document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
 }

@@ -1,33 +1,30 @@
 import { useState } from 'react'
+import { loginUser } from '../utils/login'
 
 export function LoginForm (): JSX.Element {
   const [error, setError] = useState<string | null>(null)
 
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>): Promise<any> => {
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const formData = new FormData(event.currentTarget)
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    if (email === '' || password === '') {
-      setError('Por favor llena todos los campos')
-      return
-    }
-    const response = await fetch('api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
-    })
-    if (response.ok) {
-      setError(null)
-      window.location.href = '/'
-    } else {
-      setError('Correo o contraseña incorrectos')
-    }
+    loginUser({ email, password })
+      .then((response) => {
+        if (response instanceof Error) {
+          setError(response.message)
+        } else {
+          setError(null)
+          const session = response
+          document.cookie = `userId=${session.userId}`
+          window.location.href = '/'
+        }
+      })
+      .catch(() => {
+        setError('Usuario o contraseña incorrectos')
+      })
   }
 
   return (
@@ -45,6 +42,7 @@ export function LoginForm (): JSX.Element {
           <input type='password' id='password' name='password' required className='relative z-0 rounded-full focus:outline-none border-none bg-inherit w-full px-1' />
         </div>
         <a href='/register' className='text-sm underline ml-1 mt-2 self-start text-logan-300 pl-3'>No tengo una cuenta</a>
+        <p className='text-red-500 mt-4 h-4'>{error}</p>
         <div className='flex relative z-0 mt-8 mb-1 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
           <div className='absolute top-1/2 left-1/2 -z-10 w-[300%] h-[2px] bg-gradient-to-r from-transparent via-logan-300 to-transparent rounded-full transform -translate-x-1/2' />
           <div className='flex w-full justify-center bg-gradient-to-r from-logan-400 to-transparent p-[2px] rounded-full backdrop-blur-lg'>

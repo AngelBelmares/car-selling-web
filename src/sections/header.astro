@@ -3,8 +3,7 @@ import { Session } from '../components/Session.tsx'
 
 
 const session = {
-  isLogged: Astro.cookies.get('isLogged')?.boolean(),
-  sessionID: Astro.cookies.get('sessionID')?.value
+  userId: Astro.cookies.get('userId')?.value,
 }
 
 
@@ -56,5 +55,5 @@ const navigationLinks: NavigationLink[] = [
        ))}
     </ul>
   </nav>
-  <Session isLogged={true} sessionID='' client:load></Session>
+  <Session userId={session.userId} client:load></Session>
 </header>

@@ -1,73 +1,37 @@
 import { useState } from 'react'
-import type { User } from '../types/auth'
+import { registerUser, validateData } from '../utils/signIn'
 
 export function SignInForm (): JSX.Element {
   const [error, setError] = useState<string | null>(null)
 
   const handleSignIn = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
-    console.log('submit')
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const formData = new FormData(event.currentTarget)
     const username = formData.get('username') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string
     const password2 = formData.get('password2') as string
-    console.log({ username, email, password, password2 })
 
-    if (username === '' || email === '' || password === '' || password2 === '') {
-      setError('Por favor llena todos los campos')
-      return
-    }
-    if (username.length < 4) {
-      setError('El nombre de usuario debe tener al menos 4 caracteres')
-      return
-    }
-    if (password !== password2) {
-      setError('Las contraseñas no coinciden')
-      return
-    }
-    if (password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres')
-      return
-    }
-    if (!emailRegex.test(email)) {
-      setError('Correo inválido')
+    const validatedDataForm = validateData({ userName: username, email, password, password2 })
+    if (validatedDataForm instanceof Error) {
+      setError(validatedDataForm.message)
       return
     }
 
-    const response = registerUser({ email, password, username }).catch(() => {
-      setError('Ocurrió un error, intenta de nuevo')
-    })
-
-    if (response instanceof Error) {
-      setError(response.message)
-    } else {
-      setError(null)
-    }
-  }
-
-  async function registerUser ({ email, password, username }: User): Promise<User | Error> {
-    try {
-      const response = await fetch('api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password, username })
+    registerUser({ userName: username, email, password, firstName: '', lastName: '', city: '', address: '', postalCode: 0, telephone: 0, id_country: 1 })
+      .then((response) => {
+        if (response instanceof Error) {
+          setError(response.message)
+        } else {
+          setError(null)
+          const session = response
+          window.location.href = `/ConfirmUser?userId=${session.userId}`
+        }
       })
-      if (response.ok) {
-        window.location.href = `/confirmUser?userid=${'userId'}`
-        return await response.json()
-      } else {
-        const error = await response.json()
-        throw new Error(error.message)
-      }
-    } catch (error) {
-      throw new Error('Ocurrió un error, intenta de nuevo')
-    }
+      .catch(() => {
+        setError('Ocurrió un error, intenta de nuevo')
+      })
   }
 
   return (
@@ -93,8 +57,8 @@ export function SignInForm (): JSX.Element {
           <input type='password' id='password2' name='password2' className='relative z-0 rounded-full focus:outline-none border-none bg-inherit w-full px-1' />
         </div>
         <a href='/login' className='text-sm underline ml-1 mt-2 self-start text-logan-300 pl-3'>Ya tengo una cuenta</a>
-        {error !== null && <p className='text-red-500 mt-8'>{error}</p>}
-        <div className='flex relative z-0 mt-8 mb-1 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
+        <p className='text-red-500 mt-4 h-6'>{error}</p>
+        <div className='flex relative z-0 mt-5 mb-1 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
           <div className='absolute top-1/2 left-1/2 -z-10 w-[300%] h-[2px] bg-gradient-to-r from-transparent via-logan-300 to-transparent rounded-full transform -translate-x-1/2' />
           <div className='flex w-full justify-center bg-gradient-to-r from-logan-400 to-transparent p-[2px] rounded-full backdrop-blur-lg'>
             <button
