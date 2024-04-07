@@ -2,7 +2,7 @@ import { API_URL } from '../constants/api'
 import type { Session, SignIn } from '../types/auth'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export async function registerUser ({ userName, email, password, firstName = '', lastName = '', id_country = 1, city = '', address = '', postalCode = 0, telephone = 0 }: SignIn): Promise<Session | Error> {
+export async function registerUser ({ userName, email, password, firstName = '', lastName = '', id_country = 1, city = '', address = '', postalCode = 0, telephone = 0 }: SignIn): Promise<Session> {
   const response = await fetch(`${API_URL}/SignUp`, {
     method: 'POST',
     headers: {
@@ -13,8 +13,7 @@ export async function registerUser ({ userName, email, password, firstName = '',
   if (response.ok) {
     return await response.json() as Session
   } else {
-    const error = await response.json()
-    throw new Error(error.message)
+    throw new Error('Ocurrió un error, intenta de nuevo')
   }
 }
 

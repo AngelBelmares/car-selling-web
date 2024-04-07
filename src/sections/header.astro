@@ -1,12 +1,6 @@
 ---
 import { Session } from '../components/Session.tsx'
 
-
-const session = {
-  userId: Astro.cookies.get('userId')?.value,
-}
-
-
 interface NavigationLink {
 	title: string;
 	iconName: string;
@@ -55,5 +49,5 @@ const navigationLinks: NavigationLink[] = [
        ))}
     </ul>
   </nav>
-  <Session userId={session.userId} client:load></Session>
+  <Session client:load></Session>
 </header>

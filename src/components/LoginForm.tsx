@@ -1,29 +1,29 @@
 import { useState } from 'react'
-import { loginUser } from '../utils/login'
+import { loginUser } from '../services/login'
 
 export function LoginForm (): JSX.Element {
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
+    setLoading(true)
+    setError(null)
 
     const formData = new FormData(event.currentTarget)
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
     loginUser({ email, password })
-      .then((response) => {
-        if (response instanceof Error) {
-          setError(response.message)
-        } else {
-          setError(null)
-          const session = response
-          document.cookie = `userId=${session.userId}`
-          window.location.href = '/'
-        }
+      .then((session) => {
+        setError(null)
+        setLoading(false)
+        document.cookie = `userId=${session.userId}`
+        window.location.href = '/'
       })
-      .catch(() => {
-        setError('Usuario o contraseña incorrectos')
+      .catch((error) => {
+        setError(error.message)
+        setLoading(false)
       })
   }
 
@@ -42,7 +42,10 @@ export function LoginForm (): JSX.Element {
           <input type='password' id='password' name='password' required className='relative z-0 rounded-full focus:outline-none border-none bg-inherit w-full px-1' />
         </div>
         <a href='/register' className='text-sm underline ml-1 mt-2 self-start text-logan-300 pl-3'>No tengo una cuenta</a>
-        <p className='text-red-500 mt-4 h-4'>{error}</p>
+        <div className='flex items-center justify-center mt-4 h-6'>
+          {loading && <span className='w-3 h-3 rounded-full block mx-4 my-auto relative text-logan-300 -left-24 box-border animate-shadow-rolling' />}
+          <p className='text-red-500 '>{error}</p>
+        </div>
         <div className='flex relative z-0 mt-8 mb-1 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
           <div className='absolute top-1/2 left-1/2 -z-10 w-[300%] h-[2px] bg-gradient-to-r from-transparent via-logan-300 to-transparent rounded-full transform -translate-x-1/2' />
           <div className='flex w-full justify-center bg-gradient-to-r from-logan-400 to-transparent p-[2px] rounded-full backdrop-blur-lg'>

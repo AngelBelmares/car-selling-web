@@ -1,13 +1,23 @@
 import { Button } from './Button'
+import { useState, useEffect } from 'react'
 
-interface SessionProps {
-  userId?: string
-}
+export function Session (): JSX.Element {
+  const [userId, setUserId] = useState<string | null>(null)
 
-export function Session ({ userId = '' }: SessionProps): JSX.Element {
+  useEffect(() => {
+    const userCookie = document.cookie.split('; ').find(row => row.startsWith('userId'))
+    const userId = userCookie !== undefined ? userCookie.split('=')[1] : null
+    setUserId(userId)
+  }, [])
+
+  const handleCloseSession = (): void => {
+    document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    setUserId(null)
+  }
+
   return (
     <div className='flex gap-x-2 justify-center items-center'>
-      {userId.length <= 0
+      {userId === null
         ? (
           <div className='flex'>
             <a href='/register'>
@@ -31,8 +41,4 @@ export function Session ({ userId = '' }: SessionProps): JSX.Element {
           )}
     </div>
   )
-}
-
-const handleCloseSession = (): void => {
-  document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
 }

@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { registerUser, validateData } from '../utils/signIn'
+import { registerUser, validateData } from '../services/signIn'
 
 export function SignInForm (): JSX.Element {
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleSignIn = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
+    setLoading(true)
+    setError(null)
 
     const formData = new FormData(event.currentTarget)
     const username = formData.get('username') as string
@@ -16,21 +19,18 @@ export function SignInForm (): JSX.Element {
     const validatedDataForm = validateData({ userName: username, email, password, password2 })
     if (validatedDataForm instanceof Error) {
       setError(validatedDataForm.message)
+      setLoading(false)
       return
     }
 
     registerUser({ userName: username, email, password, firstName: '', lastName: '', city: '', address: '', postalCode: 0, telephone: 0, id_country: 1 })
-      .then((response) => {
-        if (response instanceof Error) {
-          setError(response.message)
-        } else {
-          setError(null)
-          const session = response
-          window.location.href = `/ConfirmUser?userId=${session.userId}`
-        }
+      .then((session) => {
+        setLoading(false)
+        window.location.href = `/confirmUser?userId=${session.userId}`
       })
-      .catch(() => {
-        setError('Ocurrió un error, intenta de nuevo')
+      .catch((error) => {
+        setError(error.message)
+        setLoading(false)
       })
   }
 
@@ -57,7 +57,10 @@ export function SignInForm (): JSX.Element {
           <input type='password' id='password2' name='password2' className='relative z-0 rounded-full focus:outline-none border-none bg-inherit w-full px-1' />
         </div>
         <a href='/login' className='text-sm underline ml-1 mt-2 self-start text-logan-300 pl-3'>Ya tengo una cuenta</a>
-        <p className='text-red-500 mt-4 h-6'>{error}</p>
+        <div className='flex items-center justify-center mt-4 h-6'>
+          {loading && <span className='w-3 h-3 rounded-full block mx-4 my-auto relative text-logan-300 -left-24 box-border animate-shadow-rolling' />}
+          <p className='text-red-500 '>{error}</p>
+        </div>
         <div className='flex relative z-0 mt-5 mb-1 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
           <div className='absolute top-1/2 left-1/2 -z-10 w-[300%] h-[2px] bg-gradient-to-r from-transparent via-logan-300 to-transparent rounded-full transform -translate-x-1/2' />
           <div className='flex w-full justify-center bg-gradient-to-r from-logan-400 to-transparent p-[2px] rounded-full backdrop-blur-lg'>

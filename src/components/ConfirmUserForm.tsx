@@ -1,48 +1,33 @@
 import { useState } from 'react'
-import type { ConfirmUser, Session } from '../types/auth'
-import { API_URL } from '../constants/api'
+import { confirmUser } from '../services/confirmUser'
 
 export function ConfirmUserForm (): JSX.Element {
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const searchParams = new URLSearchParams(window.location.search)
-  const userId = searchParams.get('userid') as string
+  const userId = searchParams.get('userId') as string
 
   const handleConfirmUser = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
+    setLoading(true)
+    setError(null)
 
     const form = event.currentTarget
     const formData = new FormData(form)
     const authCode = formData.get('authCode') as string
 
     confirmUser({ userId, authCode })
-      .then((response) => {
-        if (response instanceof Error) {
-          setError(response.message)
-        } else {
-          setError(null)
-          const session = response
-          document.cookie = `userId=${session.userId}`
-        }
-      })
-      .catch(() => {
-        setError('Código de autenticación incorrecto')
-      })
-  }
-
-  async function confirmUser ({ userId, authCode }: ConfirmUser): Promise<Session | Error> {
-    try {
-      const response = await fetch(`${API_URL}/confirmUser?userId=${userId}&authCode=${authCode}`)
-      if (response.ok) {
+      .then((session) => {
+        setError(null)
+        setLoading(false)
+        document.cookie = `userId=${session.userId}`
         window.location.href = '/'
-        return await response.json() as Session
-      } else {
-        const error = await response.json()
-        throw new Error(error.message)
-      }
-    } catch (error) {
-      throw new Error('Código de autenticación incorrecto')
-    }
+      })
+      .catch((error) => {
+        setError(error.message)
+        setLoading(false)
+      })
   }
 
   return (
@@ -59,7 +44,10 @@ export function ConfirmUserForm (): JSX.Element {
           <label htmlFor='authCode' className='absolute -top-4 left-5 z-10 bg-neutral-900 px-3 text-base'>Código de Autenticación</label>
           <input type='text' id='authCode' name='authCode' className='relative z-0 rounded-full focus:outline-none border-2 border-none bg-inherit w-full px-1' />
         </div>
-        <p className='text-red-500 mt-6 h-6'>{error}</p>
+        <div className='flex items-center justify-center mt-4 h-6'>
+          {loading && <span className='w-3 h-3 rounded-full block mx-4 my-auto relative text-logan-300 -left-24 box-border animate-shadow-rolling' />}
+          <p className='text-red-500 '>{error}</p>
+        </div>
         <div className='flex relative z-0 mt-5 mb-2 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
           <div className='absolute top-1/2 left-1/2 -z-10 w-[300%] h-[2px] bg-gradient-to-r from-transparent via-logan-300 to-transparent rounded-full transform -translate-x-1/2' />
           <div className='flex w-full justify-center bg-gradient-to-r from-logan-400 to-transparent p-[2px] rounded-full backdrop-blur-lg'>
