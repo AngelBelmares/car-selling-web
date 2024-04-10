@@ -15,7 +15,12 @@ export function AppointmenForm (): JSX.Element {
     carListApi()
       .then((cars) => {
         setCars(cars)
-        setSelectedCar((cars.find((car) => car.idCar === Number(carId)) != null) || null)
+        const car = cars.find((car) => car.idCar === Number(carId))
+        if (car !== undefined) {
+          setSelectedCar(car)
+        } else {
+          setSelectedCar(cars[0])
+        }
       })
       .catch((error) => {
         setError(error.message)
@@ -41,11 +46,10 @@ export function AppointmenForm (): JSX.Element {
     const formData = new FormData(event.currentTarget)
     const date = formData.get('date') as string
     const idCar = formData.get('cars') as string
-    console.log(idCar)
 
     const validatedData = appointmentSchema.safeParse({
       userId,
-      idCar: carId,
+      idCar,
       date: new Date(date)
     })
 
@@ -55,7 +59,7 @@ export function AppointmenForm (): JSX.Element {
       return
     }
 
-    registerAppointment({ userId, idCar, date })
+    registerAppointment({ userId: validatedData.data.userId, idCar: validatedData.data.idCar, date: validatedData.data.date })
       .then((message) => {
         setMessage(message)
         setTimeout(() => {
