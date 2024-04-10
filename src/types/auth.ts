@@ -6,6 +6,7 @@ export interface User {
 
 export interface Session {
   userId: string
+  token: string
 }
 
 export interface ConfirmUser {

@@ -23,4 +23,5 @@ export interface RegisterAppointment {
   userId: string
   idCar: string
   date: Date
+  token: string
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { carListApi } from '../services/carApi'
-import { registerAppointment, appointmentSchema } from '../services/appointment'
+import { registerAppointment, appointmentSchema, getCurrentTime } from '../services/appointment'
 import type { CarApi } from '../types/cars'
 
 export function AppointmenForm (): JSX.Element {
@@ -9,7 +9,6 @@ export function AppointmenForm (): JSX.Element {
   const [message, setMessage] = useState<string | null>(null)
   const [cars, setCars] = useState<CarApi[]>([])
   const [selectedCar, setSelectedCar] = useState<CarApi | null >(null)
-  const carId = new URLSearchParams(window.location.search).get('idCar')
 
   useEffect(() => {
     carListApi()
@@ -27,16 +26,10 @@ export function AppointmenForm (): JSX.Element {
       })
   }, [])
 
-  const session = document.cookie.split(';').find((cookie) => cookie.includes('userId'))
-  const userId = session?.split('=')[1]
-
-  const getCurrentTime = (): string => {
-    const date = new Date()
-    const offset = date.getTimezoneOffset()
-    return new Date(date.getTime() - (offset * 60000)).toISOString().slice(0, 16)
-  }
-
+  const userId = document.cookie.split(';').find((cookie) => cookie.includes('userId'))?.split('=')[1]
+  const token = document.cookie.split(';').find((cookie) => cookie.includes('token'))?.split('=')[1]
   const currentTime = getCurrentTime()
+  const carId = new URLSearchParams(window.location.search).get('idCar')
 
   const handleAppointmentSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
@@ -50,7 +43,8 @@ export function AppointmenForm (): JSX.Element {
     const validatedData = appointmentSchema.safeParse({
       userId,
       idCar,
-      date: new Date(date)
+      date: new Date(date),
+      token
     })
 
     if (!validatedData.success) {
@@ -59,7 +53,7 @@ export function AppointmenForm (): JSX.Element {
       return
     }
 
-    registerAppointment({ userId: validatedData.data.userId, idCar: validatedData.data.idCar, date: validatedData.data.date })
+    registerAppointment({ userId: validatedData.data.userId, idCar: validatedData.data.idCar, date: validatedData.data.date, token: validatedData.data.token })
       .then((message) => {
         setMessage(message)
         setTimeout(() => {
@@ -79,7 +73,7 @@ export function AppointmenForm (): JSX.Element {
       <h1 className='text-3xl font-medium '>Agenda una Cita</h1>
       <hr className='h-px w-full mt-6 mb-2 bg-gradient-to-r from-transparent via-logan-300 to-transparent border-0' />
       {
-        session !== undefined
+        token !== undefined || token !== undefined
           ? (
             <form onSubmit={handleAppointmentSubmit} className='flex flex-col items-center w-full px-10 mt-10 mb-2'>
               <div className='relative w-full py-1 px-3 ring-2 ring-logan-300 rounded-full focus-within:shadow-[0px_0px_4px_4px_rgba(188,176,217,0.76)]'>

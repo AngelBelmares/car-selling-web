@@ -22,6 +22,7 @@ export function ConfirmUserForm (): JSX.Element {
         setError(null)
         setLoading(false)
         document.cookie = `userId=${session.userId}`
+        document.cookie = `token=${session.token}`
         window.location.href = '/'
       })
       .catch((error) => {

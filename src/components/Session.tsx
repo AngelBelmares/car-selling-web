@@ -10,35 +10,53 @@ export function Session (): JSX.Element {
     setUserId(userId)
   }, [])
 
-  const handleCloseSession = (): void => {
-    document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-    setUserId(null)
-  }
-
   return (
     <div className='flex gap-x-2 justify-center items-center'>
       {userId === null
         ? (
-          <div className='flex'>
-            <a href='/register'>
-              <Button>
-                Registrarse
-              </Button>
-            </a>
-            <a href='/login'>
-              <Button>
-                Iniciar sesión
-              </Button>
-            </a>
-          </div>
+          <UserActions />
           )
         : (
-          <div>
-            <Button onClick={handleCloseSession}>
-              Cerrar sesión
-            </Button>
-          </div>
+          <UserProfile setUserId={setUserId} />
           )}
+    </div>
+  )
+}
+
+function UserProfile ({ setUserId }: { setUserId: (value: string | null) => void }): JSX.Element {
+  const handleCloseSession = (): void => {
+    document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    setUserId(null)
+  }
+
+  return (
+    <div className='flex gap-x-2'>
+      <Button onClick={handleCloseSession}>
+        Cerrar sesión
+      </Button>
+      <a href='/viewAppointments'>
+        <Button>
+          Ver citas
+        </Button>
+      </a>
+    </div>
+  )
+}
+
+function UserActions (): JSX.Element {
+  return (
+    <div className='flex'>
+      <a href='/register'>
+        <Button>
+          Registrarse
+        </Button>
+      </a>
+      <a href='/login'>
+        <Button>
+          Iniciar sesión
+        </Button>
+      </a>
     </div>
   )
 }
