@@ -18,3 +18,9 @@ export interface CarCard {
   price: number
   image: string
 }
+
+export interface RegisterAppointment {
+  userId: string
+  idCar: string
+  date: Date
+}
