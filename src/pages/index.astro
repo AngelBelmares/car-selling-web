@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import carImage from '../assets/images/car_image.webp'
+import concesionariaImage from '../assets/images/concesionaria.webp'
+
 ---
 
 <Layout title="Welcome to Astro.">
@@ -8,7 +11,7 @@ import Layout from '../layouts/Layout.astro';
       <h1 class="text-3xl uppercase mb-3 text-logan-300 px-2 md:px-0">¿Quiénes somos?</h1>
       <hr class='h-px w-full mt-2 mb-2 bg-gradient-to-r from-transparent via-logan-300 to-transparent border-0' />
       <div class="flex w-full h-44 items-start gap-x-4">
-        <img src="/src/assets/images/car_image.webp" alt="" class="h-full rounded-md">
+        <img src={carImage.src} alt="" class="h-full rounded-md">
         <p class="mt-2">CarLink es tu destino confiable para la compra de automóviles. 
           Nos esforzamos por ofrecerte una amplia selección de vehículos de calidad, 
           junto con un proceso de compra simple y transparente. En CarLink, 
@@ -24,7 +27,7 @@ import Layout from '../layouts/Layout.astro';
           En CarLink, nos enorgullecemos de ofrecer una experiencia de compra de automóviles sin igual. 
           Nuestra concesionaria cuenta con una amplia variedad de vehículos nuevos y usados, 
           cuidadosamente seleccionados para satisfacer tus necesidades y preferencias individuales.</p>
-        <img src="/src/assets/images/concesionaria.webp" alt="" class="h-full rounded-md">
+        <img src={concesionariaImage.src} alt="" class="h-full rounded-md">
       </div>
     </section>
   </div>
