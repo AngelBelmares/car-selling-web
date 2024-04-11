@@ -1,5 +1,5 @@
 import { API_URL } from '../constants/api'
-import type { RegisterAppointment } from '../types/cars'
+import type { RegisterAppointment, Appointment } from '../types/cars'
 import { z } from 'zod'
 
 export async function registerAppointment ({ userId, idCar, date, token }: RegisterAppointment): Promise<string> {
@@ -32,7 +32,7 @@ export const getCurrentTime = (): string => {
   return new Date(date.getTime() - (offset * 60000)).toISOString().slice(0, 16)
 }
 
-export async function getAppointments ({ userId, token }: { userId: string, token: string }): Promise<any[]> {
+export async function getAppointments ({ userId, token }: { userId: string, token: string }): Promise<Appointment[]> {
   const res = await fetch(`${API_URL}/api/Appointments/${userId}`, {
     method: 'GET',
     headers: {
@@ -44,5 +44,5 @@ export async function getAppointments ({ userId, token }: { userId: string, toke
     throw new Error('Error fetching appointments')
   }
   const data = await res.json()
-  return data
+  return data as Appointment[]
 }

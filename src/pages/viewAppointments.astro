@@ -1,32 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getAppointments } from "../services/appointment";
-
-const userId = document.cookie.split(';').find((cookie) => cookie.includes('userId'))?.split('=')[1]
-const token = document.cookie.split(';').find((cookie) => cookie.includes('token'))?.split('=')[1]
-
-let appointments = []
-
-if(userId !== undefined && token !== undefined) {
-  getAppointments({userId, token}).then((data) => {
-    appointments = data
-  })
-}
+import { Appointments } from "../components/Appointments";
 
 ---
 
 <Layout title="Citas">
-  <div>
-    <h1>Citas</hjson1>
-    <ul>
-      {appointments.map((appointment) => (
-        <li key={appointment.id}>
-          <p>{appointment.date}</p>
-          <p>{appointment.time}</p>
-          <p>{appointment.doctor}</p>
-          <p>{appointment.specialty}</p>
-        </li>
-      ))}
-    </ul>
+  <div class="flex flex-row justify-center">
+    <h1 class="text-4xl text-white mt-10 mb-4 text-center">Citas</hjson1>
+    <Appointments client:only/>
   </div>
 </Layout>

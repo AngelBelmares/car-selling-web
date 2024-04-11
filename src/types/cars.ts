@@ -11,6 +11,17 @@ export interface CarApi {
   appointments: any
 }
 
+export interface Appointment {
+  idAppointment: number
+  date: string
+  createdAt: string
+  modifiedAt: string
+  idUser: string
+  user: any
+  idCar: number
+  car: CarApi
+}
+
 export interface CarCard {
   idCar: number
   name: string
