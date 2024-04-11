@@ -27,7 +27,7 @@ export function Appointments (): JSX.Element {
     <>
       {isLoading && <span className='mt-9 w-3 h-3 rounded-full block mx-4 my-auto relative -left-24 box-border animate-shadow-rolling' />}
       {message !== null && <p>{message}</p>}
-      <ul className='flex w-full max-w-screen-lg gap-y-8 mt-6'>
+      <ul className='flex flex-col w-full max-w-screen-lg gap-y-8 mt-6'>
         {appointments.length > 0 && appointments.map((appointment) => (
           <li key={appointment.idAppointment} className='flex w-full h-28'>
             <header className='h-full aspect-video'>
