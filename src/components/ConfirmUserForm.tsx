@@ -4,6 +4,7 @@ import { confirmUser } from '../services/confirmUser'
 export function ConfirmUserForm (): JSX.Element {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [message, setMessage] = useState<string | null>(null)
 
   const searchParams = new URLSearchParams(window.location.search)
   const userId = searchParams.get('userId') as string
@@ -18,12 +19,13 @@ export function ConfirmUserForm (): JSX.Element {
     const authCode = formData.get('authCode') as string
 
     confirmUser({ userId, authCode })
-      .then((session) => {
+      .then((succesMessage) => {
         setError(null)
         setLoading(false)
-        document.cookie = `userId=${session.userId}`
-        document.cookie = `token=${session.token}`
-        window.location.href = '/'
+        setMessage(succesMessage)
+        setTimeout(() => {
+          window.location.href = '/login'
+        }, 5000)
       })
       .catch((error) => {
         setError(error.message)
@@ -48,6 +50,7 @@ export function ConfirmUserForm (): JSX.Element {
         <div className='flex items-center justify-center mt-4 h-6'>
           {loading && <span className='w-3 h-3 rounded-full block mx-4 my-auto relative text-logan-300 -left-24 box-border animate-shadow-rolling' />}
           <p className='text-red-500 '>{error}</p>
+          <p className='text-green-500 '>{message}</p>
         </div>
         <div className='flex relative z-0 mt-5 mb-2 justify-center bg-gradient-to-r from-logan-400/50 to-transparent p-1 rounded-full backdrop-blur-lg'>
           <div className='absolute top-1/2 left-1/2 -z-10 w-[300%] h-[2px] bg-gradient-to-r from-transparent via-logan-300 to-transparent rounded-full transform -translate-x-1/2' />
